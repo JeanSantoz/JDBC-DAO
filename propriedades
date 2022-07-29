@@ -1,0 +1,5 @@
+user=developer
+password=123456
+dburl=jdbc:mysql://127.0.0.1:3306/cursojdbc
+allowPublicKeyRetrieval=true
+useSSL=false
