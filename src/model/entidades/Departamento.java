@@ -1,3 +1,4 @@
+package model.entidades;
 import java.io.Serializable;
 
 public class Departamento implements Serializable{
