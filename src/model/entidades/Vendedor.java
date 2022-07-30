@@ -22,6 +22,8 @@ public class Vendedor implements Serializable {
         this.departamento = departamento;
     }
 
+    public Vendedor() {}
+
     public int getId() {
         return id;
     }

@@ -13,6 +13,8 @@ public class Departamento implements Serializable{
         this.id = id;
     }
 
+    public Departamento() {}
+
     public String getNome() {
         return nome;
     }
