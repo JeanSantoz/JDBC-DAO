@@ -15,7 +15,7 @@ public class VendedorDaoJDBC implements VendedorDao {
 
     private Connection conn;
 
-    public VendedorDaoJDBC(Connection conn){
+    public VendedorDaoJDBC(Connection conn) {
         this.conn = conn;
     }
 
@@ -36,34 +36,26 @@ public class VendedorDaoJDBC implements VendedorDao {
 
     @Override
     public Vendedor findById(Integer id) {
-        
+
         PreparedStatement st = null;
-        ResultSet rs = null;  
+        ResultSet rs = null;
 
         try {
 
             st = conn.prepareStatement(
-                "SELECT seller.*,department.Name as DepName "  
-                + "FROM seller INNER JOIN department " 
-                + "ON seller.DepartmentId = department.Id " 
-                + "WHERE seller.Id = ?");
+                    "SELECT seller.*,department.Name as DepName "
+                            + "FROM seller INNER JOIN department "
+                            + "ON seller.DepartmentId = department.Id "
+                            + "WHERE seller.Id = ?");
 
             st.setInt(1, id);
             rs = st.executeQuery();
 
-            if(rs.next()){
+            if (rs.next()) {
 
-                Departamento departamento = new Departamento();
-                departamento.setId(rs.getInt("DepartmentId"));
-                departamento.setNome(rs.getString("DepName"));
+                Departamento departamento = instanciarDepartamento(rs);
 
-                Vendedor vendedor = new Vendedor();
-                vendedor.setId(rs.getInt("Id"));
-                vendedor.setName(rs.getString("Name"));
-                vendedor.setEmail(rs.getString("Email"));
-                vendedor.setBirthDate(rs.getDate("BirthDate"));
-                vendedor.setBaseSalary(rs.getDouble("BaseSalary"));
-                vendedor.setDepartamento(departamento);
+                Vendedor vendedor = instanciarVendedor(rs, departamento);
 
                 return vendedor;
 
@@ -72,8 +64,7 @@ public class VendedorDaoJDBC implements VendedorDao {
 
         } catch (SQLException e) {
             throw new DbException(e.getMessage());
-        }
-        finally{
+        } finally {
             DB.closeStatement(st);
             DB.closeResultSet(rs);
         }
@@ -83,6 +74,26 @@ public class VendedorDaoJDBC implements VendedorDao {
     public List<Vendedor> findAll() {
 
         return null;
+    }
+
+    private Vendedor instanciarVendedor(ResultSet rs, Departamento departamento) throws SQLException {
+
+        Vendedor vendedor = new Vendedor();
+        vendedor.setId(rs.getInt("Id"));
+        vendedor.setName(rs.getString("Name"));
+        vendedor.setEmail(rs.getString("Email"));
+        vendedor.setBirthDate(rs.getDate("BirthDate"));
+        vendedor.setBaseSalary(rs.getDouble("BaseSalary"));
+        vendedor.setDepartamento(departamento);
+        return vendedor;
+        
+    }
+
+    private Departamento instanciarDepartamento(ResultSet rs) throws SQLException {
+        Departamento departamento = new Departamento();
+        departamento.setId(rs.getInt("DepartmentId"));
+        departamento.setNome(rs.getString("DepName"));
+        return departamento;
     }
 
 }
