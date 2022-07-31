@@ -18,10 +18,17 @@ public class App {
         System.out.println("\n==> Teste findByDepartment <==");
         Departamento departamento = new Departamento(null, 2);
         List<Vendedor> vendedores = v1Dao.findByDepartment(departamento);
-        
-        for(Vendedor i : vendedores){
+
+        for (Vendedor i : vendedores) {
             System.out.println(i);
         }
-        
+
+        System.out.println("\n==> Teste findAll <==");
+        vendedores = v1Dao.findAll();
+
+        for (Vendedor i : vendedores) {
+            System.out.println(i);
+        }
+
     }
 }
