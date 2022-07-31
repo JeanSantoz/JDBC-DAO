@@ -1,3 +1,4 @@
+import java.util.Date;
 import java.util.List;
 
 import model.dao.DaoFactory;
@@ -30,5 +31,15 @@ public class App {
             System.out.println(i);
         }
 
+        System.out.println("\n==> Teste Insert <==");
+        Vendedor v2 = new Vendedor(1, "Jo", "jo@gmail.com", new Date(), 1800.00, departamento);
+        v1Dao.insert(v2);
+
+       // Teste Update
+        v2.setBaseSalary(1250.50);
+        v1Dao.update(v2);
+
+        //Teste Delete
+        v1Dao.deleteById(9);
     }
 }

@@ -1,9 +1,11 @@
 package model.dao;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -25,15 +27,104 @@ public class VendedorDaoJDBC implements VendedorDao {
     @Override
     public void insert(Vendedor vendedor) {
 
+        PreparedStatement st = null;
+
+        try  {
+            conn = DB.getConnection();
+            st = conn.prepareStatement(
+                "INSERT INTO seller "
+					+ "(Name, Email, BirthDate, BaseSalary, DepartmentId) "
+					+ "VALUES "
+					+ "(?, ?, ?, ?, ?)",
+                    Statement.RETURN_GENERATED_KEYS);
+                    
+
+            st.setString(1, vendedor.getName());
+            st.setString(2, vendedor.getEmail());
+            st.setDate(3, new Date(vendedor.getBirthDate().getTime()));
+            st.setDouble(4, vendedor.getBaseSalary());
+            st.setInt(5, vendedor.getDepartamento().getId());
+
+            int rows = st.executeUpdate();
+
+            if(rows>0){
+                ResultSet rs = st.getGeneratedKeys();
+                if(rs.next()){
+                    int id = rs.getInt(1);
+                    vendedor.setId(id);
+                    System.out.println("Insert Efetuado !");  
+                }
+                DB.closeResultSet(rs);
+                  
+            }
+            else{
+                throw new DbException("Insert não executado !");
+            }
+
+
+        
+        } 
+        catch (SQLException e) {
+            throw new DbException(e.getMessage());
+        }
+        finally{
+            DB.closeStatement(st); 
+        }
+
     }
 
     @Override
     public void update(Vendedor vendedor) {
 
+        PreparedStatement st = null;
+
+        try {
+
+            st = conn.prepareStatement(
+                    "UPDATE seller "
+                    + "SET Name = ?, Email = ?, BirthDate = ?, BaseSalary = ?, DepartmentId = ? " 
+                    + "WHERE Id = ? ");
+
+            st.setString(1, vendedor.getName());
+            st.setString(2, vendedor.getEmail());
+            st.setDate(3, new Date(vendedor.getBirthDate().getTime()));
+            st.setDouble(4, vendedor.getBaseSalary());
+            st.setInt(5, vendedor.getDepartamento().getId());
+            st.setInt(6, vendedor.getId());
+
+            st.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new DbException(e.getMessage());
+        } finally {
+            DB.closeStatement(st);
+        }
+
     }
 
     @Override
     public void deleteById(Integer id) {
+
+        PreparedStatement st = null;
+
+        try {
+
+            st = conn.prepareStatement(
+                    "DELETE FROM seller WHERE Id = ? ");
+
+            st.setInt(1, id);
+
+            int rows = st.executeUpdate();
+
+            if(rows == 0){
+                throw new DbException("ID Inexistente !");
+            }
+
+        } catch (SQLException e) {
+            throw new DbException(e.getMessage());
+        } finally {
+            DB.closeStatement(st);
+        }
 
     }
 
