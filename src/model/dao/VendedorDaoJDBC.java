@@ -39,7 +39,7 @@ public class VendedorDaoJDBC implements VendedorDao {
                     Statement.RETURN_GENERATED_KEYS);
                     
 
-            st.setString(1, vendedor.getName());
+            st.setString(1, vendedor.getNome());
             st.setString(2, vendedor.getEmail());
             st.setDate(3, new Date(vendedor.getBirthDate().getTime()));
             st.setDouble(4, vendedor.getBaseSalary());
@@ -85,14 +85,21 @@ public class VendedorDaoJDBC implements VendedorDao {
                     + "SET Name = ?, Email = ?, BirthDate = ?, BaseSalary = ?, DepartmentId = ? " 
                     + "WHERE Id = ? ");
 
-            st.setString(1, vendedor.getName());
+            st.setString(1, vendedor.getNome());
             st.setString(2, vendedor.getEmail());
             st.setDate(3, new Date(vendedor.getBirthDate().getTime()));
             st.setDouble(4, vendedor.getBaseSalary());
             st.setInt(5, vendedor.getDepartamento().getId());
             st.setInt(6, vendedor.getId());
 
-            st.executeUpdate();
+            int rows = st.executeUpdate();
+
+            if(rows != 0){
+                System.out.println("Update Efetuado com sucesso!");
+            }
+            else{
+                throw new DbException("Falha no Update!");
+            }
 
         } catch (SQLException e) {
             throw new DbException(e.getMessage());
@@ -118,6 +125,9 @@ public class VendedorDaoJDBC implements VendedorDao {
 
             if(rows == 0){
                 throw new DbException("ID Inexistente !");
+            }
+            else{
+                System.out.println("Vendedor de Id = " + id + " Deletado !");
             }
 
         } catch (SQLException e) {
@@ -253,7 +263,7 @@ public class VendedorDaoJDBC implements VendedorDao {
 
         Vendedor vendedor = new Vendedor();
         vendedor.setId(rs.getInt("Id"));
-        vendedor.setName(rs.getString("Name"));
+        vendedor.setNome(rs.getString("Name"));
         vendedor.setEmail(rs.getString("Email"));
         vendedor.setBirthDate(rs.getDate("BirthDate"));
         vendedor.setBaseSalary(rs.getDouble("BaseSalary"));
