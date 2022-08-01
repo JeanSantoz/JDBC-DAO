@@ -1,5 +1,5 @@
-user=developer
-password=123456
-dburl=jdbc:mysql://127.0.0.1:3306/cursojdbc
+user=usuario do banco de dados
+password=senha do banco de dados
+dburl=url do banco de dados
 allowPublicKeyRetrieval=true
 useSSL=false
